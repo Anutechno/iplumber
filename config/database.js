@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 require("dotenv").config({ path: ".env" });
 
-const DB = process.env.DB_URL;
+const DB_URL = process.env.DB_URL;
 
 const connectDatabase = () => {
   mongoose
-    .connect(DB)
+    .connect(DB_URL)
     .then((data) => {
       console.log(`Mongodb connect with server: ${data.connection.host}`);
     })
@@ -15,3 +15,5 @@ const connectDatabase = () => {
 };
 
 module.exports = connectDatabase;
+
+// mongodb+srv://anuiplumber:<anuiplumber>@cluster0.psw82.mongodb.net/?retryWrites=true&w=majority
