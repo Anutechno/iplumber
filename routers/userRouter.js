@@ -5,7 +5,7 @@ const {
   getUser,
   updateProfile,
   getAllUser,
-} = require("../Controllers/userController");
+} = require("../controllers/userController");
 
 router.route("/register").post(registerUser);
 router.route("/getuser").get(getUser);
