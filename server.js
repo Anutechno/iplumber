@@ -8,5 +8,5 @@ const port = process.env.PORT || 5000;
 
 connectDatabase();
 app.listen(port, () => {
-  console.log(`Server is working on http:// 192.168.0.102:${port}`);
+  console.log(`Server is working on http://192.168.0.103:${port}`);
 });
