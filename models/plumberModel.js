@@ -17,7 +17,7 @@ const PlumberSchema = new mongoose.Schema({
   },
   photo: {
     type: String,
-    required: true,
+    required: true, 
   },
   license_num: {
     type: String,
@@ -66,6 +66,11 @@ const PlumberSchema = new mongoose.Schema({
   ratings: {
     type: Number,
     default: 0,
+  },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+    required: true,
   },
 });
 

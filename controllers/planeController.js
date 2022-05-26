@@ -5,8 +5,8 @@ const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 exports.createPlanes = catchAsyncErrors(async (req, res) => {
   console.log(req.body);
   try {
-    const { email } = req.body;
-    const name = await Planes.findOne({ email: email });
+    const { title } = req.body;
+    const name = await Planes.findOne({ title: title });
     if (name) {
       res.status(400).json({ mesaage: "Planes Already exist" });
     }
@@ -21,8 +21,8 @@ exports.createPlanes = catchAsyncErrors(async (req, res) => {
 //get Planes in database
 exports.getPlanes = catchAsyncErrors(async (req, res) => {
   try {
-    const { email } = req.body;
-    const Planedata = await Planes.findOne({ email: email });
+    const { id } = req.params.id;
+    const Planedata = await Planes.findOne({ id: id });
     if (!Planedata) {
       res.status(400).json({ mesaage: "Planes not found " });
       return;
