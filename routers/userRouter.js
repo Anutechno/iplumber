@@ -7,10 +7,7 @@ const {
   logoutUser,
   updateProfile,
   getAllUser,
-<<<<<<< HEAD
-  deleteUser
-=======
->>>>>>> 959ec3303450710a02b4bdf119b02bddf6fd46a6
+  deleteUser,
 } = require("../controllers/userController");
 
 router.route("/register").post(registerUser);

@@ -8,8 +8,8 @@ const e = require("express");
 exports.registerUser = catchAsyncErrors(async (req, res) => {
   console.log(req.body);
   try {
-    const { email } = req.body;
-    const name = await Users.findOne({ email: email });
+    const { email, role } = req.body;
+    const name = await Users.findOne({ email: email, role: role });
     if (name) {
       res.status(400).json({ mesaage: "User Already exist" });
     }
@@ -22,10 +22,11 @@ exports.registerUser = catchAsyncErrors(async (req, res) => {
 });
 
 //User login in database
-exports.loginUser = catchAsyncErrors(async (req, res) => {
+exports.loginUser = catchAsyncErrors(async (role, req, res) => {
   console.log(req.body);
   try {
-    const { email, password } = req.body;
+    const { email, password, role } = req.body;
+
     if (!email || !password) {
       res
         .status(400)
@@ -34,12 +35,21 @@ exports.loginUser = catchAsyncErrors(async (req, res) => {
     const userEmailPass = await Users.findOne({ email: email }).select(
       "+password"
     );
+    const findRole = await Users.findOne({ role: role });
+
     console.log(userEmailPass);
+    console.log(findRole);
 
     if (!userEmailPass) {
       res
         .status(401)
         .json({ data: email, mesaage: "Envalid email and password" });
+    }
+    if (!findRole) {
+      return res.status(403).json({
+        message: "Please make sure you are logging in from the right portal.",
+        success: false,
+      });
     }
     const isMatchPass = await userEmailPass.comparePassword(password);
     if (!isMatchPass) {
@@ -53,6 +63,17 @@ exports.loginUser = catchAsyncErrors(async (req, res) => {
         .status(200)
         .json({ data: userEmailPass, mesaage: "user signin Successfull" });
     }
+    let result = {
+      username: userEmailPass.username,
+      role: findRole.role,
+      email: userEmailPass.email,
+    };
+
+    return res.status(200).json({
+      ...result,
+      message: "Hurray! You are now logged in.",
+      success: true,
+    });
   } catch (err) {
     res.status(400).json({ data: err, mesaage: "Error" });
   }
@@ -79,6 +100,8 @@ exports.getUser = catchAsyncErrors(async (req, res) => {
   try {
     const { email } = req.body;
     const Userdata = await Users.findOne({ email: email });
+    // console.log(req.query.user);
+    // console.log(req.query.plumber);
     if (!Userdata) {
       res.status(400).json({ mesaage: "User not found " });
       return;
@@ -94,7 +117,16 @@ exports.getUser = catchAsyncErrors(async (req, res) => {
 // updateProfile
 exports.updateProfile = catchAsyncErrors(async (req, res) => {
   try {
-    const userName = await Users.findById(req.params.id);
+    const newUserData = {
+      name: req.body.name,
+      email: req.body.email,
+      role: req.body.role,
+    };
+    const userName = await Users.findById(req.params.id, newUserData, {
+      new: true,
+      // runValidators: true,
+      // useFindAndModify: false,
+    });
     console.log(userName);
 
     if (!userName) {
